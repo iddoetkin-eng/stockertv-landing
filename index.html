@@ -84,6 +84,12 @@ body::before {
   color: var(--logo-silver);
 }
 
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
 .nav-cta {
   font-family: var(--sans);
   font-size: 0.8rem;
@@ -98,6 +104,130 @@ body::before {
   transition: all 0.3s ease;
 }
 
+.hamburger {
+  width: 28px;
+  height: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  z-index: 201;
+  position: relative;
+}
+
+.hamburger span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: #fff;
+  transition: all 0.3s ease;
+  border-radius: 1px;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: translateY(9px) rotate(45deg);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: translateY(-9px) rotate(-45deg);
+}
+
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.97);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.menu-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.menu-overlay a {
+  font-family: var(--serif);
+  font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+  position: relative;
+}
+
+.menu-overlay a:hover,
+.menu-overlay a.current {
+  color: #ffffff;
+}
+
+.menu-overlay a.current::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--accent);
+}
+
+.menu-divider {
+  width: 40px;
+  height: 1px;
+  background: var(--border);
+}
+
+.page { display: block; }
+.page.hidden { display: none; }
+
+[data-animate-companies] {
+  opacity: 0;
+  transform: translateY(25px);
+}
+
+[data-animate-companies].visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.globe-tooltip {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.85);
+  border: 1px solid rgba(184, 188, 200, 0.3);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 4px;
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 20;
+  white-space: nowrap;
+  backdrop-filter: blur(8px);
+}
+
+.globe-tooltip .tt-exchange {
+  font-weight: 500;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+.globe-tooltip .tt-detail {
+  color: var(--text-secondary);
+  font-size: 0.7rem;
+}
+
 .nav-cta:hover {
   background: rgba(184, 188, 200, 0.1);
   border-color: var(--accent);
@@ -110,7 +240,7 @@ body::before {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 6rem 2rem;
+  padding: 4rem 2rem;
   position: relative;
 }
 
@@ -659,7 +789,7 @@ body::before {
 /* ─── RESPONSIVE ─── */
 @media (max-width: 768px) {
   .nav { padding: 1rem 1.5rem; }
-  .section { padding: 5rem 1.5rem; }
+  .section { padding: 3.5rem 1.5rem; }
   .stats-bar { grid-template-columns: repeat(2, 1fr); }
   .features-row { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
   .video-wrap { max-height: 450px; }
@@ -678,9 +808,27 @@ body::before {
 
 <!-- ═══ NAVIGATION ═══ -->
 <nav class="nav" id="nav">
-  <a href="#" class="nav-logo">Stocker<span>TV</span></a>
-  <a href="mailto:iddo.etkin@gmail.com" class="nav-cta">Get in Touch</a>
+  <a href="#" class="nav-logo" onclick="showPage('main'); return false;">Stocker<span>TV</span></a>
+  <div class="nav-right">
+    <a href="mailto:iddo.etkin@gmail.com" class="nav-cta">Get in Touch</a>
+    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
 </nav>
+
+<div class="menu-overlay" id="menuOverlay">
+  <a href="#" class="current" data-page="main" onclick="showPage('main'); return false;">For Platforms & Banks</a>
+  <div class="menu-divider"></div>
+  <a href="#" data-page="companies" onclick="showPage('companies'); return false;">For Companies</a>
+  <div class="menu-divider"></div>
+  <a href="mailto:iddo.etkin@gmail.com">Contact Us</a>
+</div>
+
+<!-- ═══ PAGE: MAIN (Platforms & Banks) ═══ -->
+<div class="page" id="page-main">
 
 <!-- ═══ SECTION 1 — WELCOME ═══ -->
 <section class="section hero" id="welcome">
@@ -901,6 +1049,246 @@ body::before {
   <p class="footer-copy">&copy; 2026 StockerTV. All rights reserved.</p>
 </footer>
 
+</div><!-- end page-main -->
+
+<!-- ═══ PAGE: COMPANIES (StockerTV for Companies) ═══ -->
+<div class="page hidden" id="page-companies">
+
+<section class="section hero" style="padding-top: 8rem;">
+  <div class="section-inner" style="text-align: center;">
+    <div class="hero-badge">For Publicly Traded Companies</div>
+    <h1 style="font-family: var(--serif); font-size: clamp(2.5rem, 5.5vw, 4.2rem); font-weight: 400; line-height: 1.15; color: var(--text-primary); max-width: 900px; margin: 0 auto 1.5rem;">
+      Your IR Department Speaks to 5% of Your Investors. <em style="color: var(--accent-soft);">We Reach the Other 95%.</em>
+    </h1>
+
+    <div class="video-wrap" data-animate-companies>
+      <video class="scroll-video" muted loop playsinline preload="metadata">
+        <source src="https://leoofwrctjxtkmhqphtw.supabase.co/storage/v1/object/public/Tradetok%20videos/STOCKERTV%20FOR%20IR.mp4" type="video/mp4">
+      </video>
+    </div>
+
+    <p style="font-size: 0.95rem; color: var(--text-secondary); max-width: 620px; margin: 0 auto 2rem; line-height: 1.7; font-weight: 300;">
+      We transform your IR materials — earnings reports, annual filings, product announcements — into professional, engaging video content that any investor can understand.
+    </p>
+  </div>
+</section>
+
+<!-- Problem -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-label" data-animate-companies>The Problem</div>
+    <h2 class="section-title" data-animate-companies>IR Pages Are Built for Analysts, <br>Not for Investors</h2>
+    <p class="section-subtitle" data-animate-companies>Hundreds of pages of dense filings, legal language, and spreadsheets. Retail investors simply don't engage with this content.</p>
+    <p class="section-note" data-animate-companies>
+      The result? Your company's story is being told by others — on social media, in forums, and by influencers who don't always get it right. Meanwhile, your official IR content sits unread. StockerTV changes that.
+    </p>
+  </div>
+</section>
+
+<!-- Global Reach -->
+<section class="section" id="global-reach">
+  <div class="section-inner" style="text-align: center;">
+    <div class="section-label" data-animate-companies>Global Reach</div>
+    <h2 class="section-title" data-animate-companies>One Report. Every Language. <br><em style="font-family: var(--serif); color: var(--accent-soft);">Every Market.</em></h2>
+    <p class="section-subtitle" data-animate-companies style="margin: 0 auto 2rem;">Your IR content, localized for shareholders worldwide — not just translated, but adapted to each market's standards and expectations.</p>
+
+    <div id="globe-container" style="width: 100%; height: 420px; margin: 0 auto 2rem; position: relative;" data-animate-companies>
+      <canvas id="globeCanvas"></canvas>
+      <div class="globe-tooltip" id="globeTooltip">
+        <div class="tt-exchange"></div>
+        <div class="tt-detail"></div>
+      </div>
+    </div>
+
+    <p class="section-note" data-animate-companies style="max-width: 650px; margin: 0 auto 2.5rem; text-align: center;">
+      Imagine you are a Tel Aviv-listed company expanding to European investors. We take your Hebrew earnings report and deliver professional video summaries in English, German, French, and Spanish — all approved by your IR team, all compliant with local regulations.
+    </p>
+
+    <div class="features-row" style="grid-template-columns: repeat(3, 1fr); margin-top: 2rem;">
+      <div class="feature-item" data-animate-companies data-delay="0">
+        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        <h4>Localized, Not Translated</h4>
+        <p>Each video is adapted to the local market's tone, style, and financial conventions — not just word-for-word translation.</p>
+      </div>
+      <div class="feature-item" data-animate-companies data-delay="100">
+        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <h4>Adapted to Local Regulations</h4>
+        <p>Compliance rules differ by market. Our system adjusts to meet the regulatory standards of each jurisdiction.</p>
+      </div>
+      <div class="feature-item" data-animate-companies data-delay="200">
+        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <h4>Culturally Relevant Delivery</h4>
+        <p>A video for Japanese shareholders looks and feels different from one targeting American investors — by design.</p>
+      </div>
+    </div>
+
+    <!-- Language marquee -->
+    <div class="marquee-container" style="margin-top: 3rem;">
+      <div class="marquee-track" style="animation-duration: 45s;">
+        <span>English</span><span class="marquee-divider">·</span>
+        <span>Hebrew</span><span class="marquee-divider">·</span>
+        <span>German</span><span class="marquee-divider">·</span>
+        <span>French</span><span class="marquee-divider">·</span>
+        <span>Spanish</span><span class="marquee-divider">·</span>
+        <span>Japanese</span><span class="marquee-divider">·</span>
+        <span>Mandarin</span><span class="marquee-divider">·</span>
+        <span>Portuguese</span><span class="marquee-divider">·</span>
+        <span>Korean</span><span class="marquee-divider">·</span>
+        <span>Arabic</span><span class="marquee-divider">·</span>
+        <span>Hindi</span><span class="marquee-divider">·</span>
+        <span>Italian</span><span class="marquee-divider">·</span>
+        <span>Dutch</span><span class="marquee-divider">·</span>
+        <span>Swedish</span><span class="marquee-divider">·</span>
+        <span>+ More Languages</span><span class="marquee-divider">·</span>
+        <!-- Duplicate -->
+        <span>English</span><span class="marquee-divider">·</span>
+        <span>Hebrew</span><span class="marquee-divider">·</span>
+        <span>German</span><span class="marquee-divider">·</span>
+        <span>French</span><span class="marquee-divider">·</span>
+        <span>Spanish</span><span class="marquee-divider">·</span>
+        <span>Japanese</span><span class="marquee-divider">·</span>
+        <span>Mandarin</span><span class="marquee-divider">·</span>
+        <span>Portuguese</span><span class="marquee-divider">·</span>
+        <span>Korean</span><span class="marquee-divider">·</span>
+        <span>Arabic</span><span class="marquee-divider">·</span>
+        <span>Hindi</span><span class="marquee-divider">·</span>
+        <span>Italian</span><span class="marquee-divider">·</span>
+        <span>Dutch</span><span class="marquee-divider">·</span>
+        <span>Swedish</span><span class="marquee-divider">·</span>
+        <span>+ More Languages</span><span class="marquee-divider">·</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-label" data-animate-companies>How It Works</div>
+    <h2 class="section-title" data-animate-companies>From Filing to Video <br><em style="font-family: var(--serif); color: var(--accent-soft);">in Hours, Not Weeks</em></h2>
+    <p class="section-subtitle" data-animate-companies>A simple, controlled process designed for public companies.</p>
+
+    <div class="features-row" style="grid-template-columns: repeat(3, 1fr); margin-top: 2.5rem;">
+      <div class="feature-item" data-animate-companies data-delay="0">
+        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+        <h4>1. You Share the Materials</h4>
+        <p>Your IR team selects the documents, reports, or topics. You control exactly what we work with.</p>
+      </div>
+      <div class="feature-item" data-animate-companies data-delay="100">
+        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        <h4>2. We Create & You Approve</h4>
+        <p>Our AI generates professional video scripts from your materials. Your IR team reviews and approves every word before production.</p>
+      </div>
+      <div class="feature-item" data-animate-companies data-delay="200">
+        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+        <h4>3. Publish Anywhere</h4>
+        <p>Embed videos on your IR page, share on social media, or distribute directly to shareholders. The content is yours.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Use Cases -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-label" data-animate-companies>Use Cases</div>
+    <h2 class="section-title" data-animate-companies>Every IR Moment, <br>Made Accessible</h2>
+    <p class="section-subtitle" data-animate-companies>Turn your most important communications into content any investor can engage with.</p>
+
+    <div class="features-row" style="margin-top: 2.5rem;">
+      <div class="feature-item" data-animate-companies data-delay="0">
+        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3v18h18"/><path d="M7 16l4-8 4 4 4-6"/></svg>
+        <h4>Earnings Recaps</h4>
+        <p>45-second video summaries after every quarterly report, highlighting the key numbers and takeaways.</p>
+      </div>
+      <div class="feature-item" data-animate-companies data-delay="100">
+        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        <h4>Annual Report Highlights</h4>
+        <p>Transform your 200-page annual report into 3-4 short, engaging video segments.</p>
+      </div>
+      <div class="feature-item" data-animate-companies data-delay="200">
+        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <h4>Product & Strategy Updates</h4>
+        <p>New product launch? Strategic pivot? Communicate it clearly to all your shareholders.</p>
+      </div>
+      <div class="feature-item" data-animate-companies data-delay="300">
+        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6"/><path d="M23 11h-6"/></svg>
+        <h4>M&A Explanations</h4>
+        <p>Mergers and acquisitions made simple — explain the rationale and impact in plain language.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Why StockerTV -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-label" data-animate-companies>Why StockerTV</div>
+    <h2 class="section-title" data-animate-companies>Control Your Narrative</h2>
+    <p class="section-subtitle" data-animate-companies>Your competitors are already being discussed on TikTok and YouTube. The question is — do you want someone else telling your story, or do you want to own it?</p>
+
+    <div class="features-row" style="grid-template-columns: repeat(3, 1fr); margin-top: 2.5rem;">
+      <div class="feature-item" data-animate-companies data-delay="0">
+        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4"/><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/></svg>
+        <h4>Full Approval Control</h4>
+        <p>Your IR team approves every script before it becomes a video. Nothing goes out without your sign-off.</p>
+      </div>
+      <div class="feature-item" data-animate-companies data-delay="100">
+        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <h4>SEC & FINRA Compliant</h4>
+        <p>Every video passes automated compliance checks. Built for the regulatory standards you operate under.</p>
+      </div>
+      <div class="feature-item" data-animate-companies data-delay="200">
+        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        <h4>Multi-Language</h4>
+        <p>Reach international shareholders in their native language. One source, multiple localized videos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section class="section">
+  <div class="section-inner" style="text-align: center;">
+    <div class="section-label" data-animate-companies>Simple Pricing</div>
+    <h2 class="section-title" data-animate-companies>Fixed Monthly Plans. <br>No Surprises.</h2>
+    <p class="section-subtitle" data-animate-companies style="margin: 0 auto 3rem;">Choose the plan that fits your IR communication needs.</p>
+
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; max-width: 900px; margin: 0 auto;">
+      
+      <div style="background: var(--bg-card); padding: 2.5rem 1.5rem; text-align: center;" data-animate-companies data-delay="0">
+        <p style="font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem;">Essential</p>
+        <p style="font-family: var(--serif); font-size: 1.2rem; color: var(--text-primary); margin-bottom: 0.5rem;">4 videos / month</p>
+        <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.6;">Perfect for quarterly earnings recaps and key announcements</p>
+      </div>
+
+      <div style="background: var(--bg-card); padding: 2.5rem 1.5rem; text-align: center; border-left: 1px solid var(--accent); border-right: 1px solid var(--accent);" data-animate-companies data-delay="100">
+        <p style="font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem;">Professional</p>
+        <p style="font-family: var(--serif); font-size: 1.2rem; color: var(--text-primary); margin-bottom: 0.5rem;">8–12 videos / month</p>
+        <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.6;">Ongoing IR coverage including earnings, updates, and event recaps</p>
+      </div>
+
+      <div style="background: var(--bg-card); padding: 2.5rem 1.5rem; text-align: center;" data-animate-companies data-delay="200">
+        <p style="font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem;">Enterprise</p>
+        <p style="font-family: var(--serif); font-size: 1.2rem; color: var(--text-primary); margin-bottom: 0.5rem;">Unlimited + Multi-Language</p>
+        <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.6;">Full coverage with dedicated avatar, multi-language delivery, and priority support</p>
+      </div>
+
+    </div>
+
+    <div class="cta-block" data-animate-companies>
+      <a href="mailto:iddo.etkin@gmail.com?subject=StockerTV%20for%20Companies%20Inquiry" class="cta-button">Let's Talk</a>
+      <p class="cta-sub">iddo.etkin@gmail.com</p>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p class="footer-copy">&copy; 2026 StockerTV. All rights reserved.</p>
+</footer>
+
+</div><!-- end page-companies -->
+
 <!-- ═══ SCRIPTS ═══ -->
 <script>
 // ─── Intersection Observer for animations ───
@@ -1033,6 +1421,337 @@ const videoObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.4 });
 
 videos.forEach(video => videoObserver.observe(video));
+
+// ─── Hamburger menu ───
+function toggleMenu() {
+  const hamburger = document.getElementById('hamburger');
+  const overlay = document.getElementById('menuOverlay');
+  hamburger.classList.toggle('active');
+  overlay.classList.toggle('active');
+  document.body.style.overflow = overlay.classList.contains('active') ? 'hidden' : '';
+}
+
+function showPage(page) {
+  const hamburger = document.getElementById('hamburger');
+  const overlay = document.getElementById('menuOverlay');
+  hamburger.classList.remove('active');
+  overlay.classList.remove('active');
+  document.body.style.overflow = '';
+  
+  document.getElementById('page-main').classList.toggle('hidden', page !== 'main');
+  document.getElementById('page-companies').classList.toggle('hidden', page !== 'companies');
+  
+  overlay.querySelectorAll('a[data-page]').forEach(a => {
+    a.classList.toggle('current', a.dataset.page === page);
+  });
+
+  window.scrollTo(0, 0);
+
+  // Re-observe animations for companies page
+  if (page === 'companies') {
+    const compObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const delay = entry.target.dataset.delay || 0;
+          setTimeout(() => entry.target.classList.add('visible'), parseInt(delay));
+          compObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+    document.querySelectorAll('[data-animate-companies]').forEach(el => {
+      el.classList.remove('visible');
+      compObserver.observe(el);
+    });
+  }
+
+  // Pause all videos when switching pages
+  document.querySelectorAll('video').forEach(v => v.pause());
+}
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+<script>
+// ─── 3D Globe with country borders ───
+function initGlobe() {
+  const container = document.getElementById('globe-container');
+  const canvas = document.getElementById('globeCanvas');
+  const tooltip = document.getElementById('globeTooltip');
+  if (!canvas) return;
+
+  const w = container.clientWidth;
+  const h = 420;
+  const R = 1;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 1000);
+  camera.position.z = 2.8;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setSize(w, h);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setClearColor(0x000000, 0);
+
+  const globeGroup = new THREE.Group();
+  scene.add(globeGroup);
+
+  // Solid dark sphere (ocean)
+  const innerGeo = new THREE.SphereGeometry(R * 0.997, 64, 64);
+  const innerMat = new THREE.MeshBasicMaterial({ color: 0x08080e });
+  globeGroup.add(new THREE.Mesh(innerGeo, innerMat));
+
+  // Atmosphere glow ring
+  const ringGeo = new THREE.RingGeometry(R * 1.002, R * 1.015, 80);
+  const ringMat = new THREE.MeshBasicMaterial({ color: 0x3a3a60, transparent: true, opacity: 0.06, side: THREE.DoubleSide });
+  const ring = new THREE.Mesh(ringGeo, ringMat);
+  ring.rotation.x = Math.PI / 2;
+  globeGroup.add(ring);
+
+  function latLonToVec3(lat, lon, r) {
+    const phi = (90 - lat) * (Math.PI / 180);
+    const theta = (lon + 180) * (Math.PI / 180);
+    return new THREE.Vector3(
+      -(r * Math.sin(phi) * Math.cos(theta)),
+      r * Math.cos(phi),
+      r * Math.sin(phi) * Math.sin(theta)
+    );
+  }
+
+  // Load world borders — high resolution
+  fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json')
+    .then(res => res.json())
+    .then(world => {
+      const countries = topojson.feature(world, world.objects.countries);
+      const borderMat = new THREE.LineBasicMaterial({ color: 0x5a5a78, transparent: true, opacity: 0.6 });
+
+      // Draw land mass as filled polygons
+      countries.features.forEach(feature => {
+        const coords = feature.geometry.type === 'Polygon' 
+          ? [feature.geometry.coordinates] 
+          : feature.geometry.coordinates;
+
+        coords.forEach(polygon => {
+          polygon.forEach((ring, ringIdx) => {
+            const points = [];
+            for (let i = 0; i < ring.length; i++) {
+              const [lon, lat] = ring[i];
+              points.push(latLonToVec3(lat, lon, R));
+            }
+            if (points.length > 1) {
+              // Country borders
+              const geo = new THREE.BufferGeometry().setFromPoints(points);
+              globeGroup.add(new THREE.Line(geo, borderMat));
+
+              // Fill land with subtle color (outer ring only)
+              if (ringIdx === 0 && points.length > 3) {
+                try {
+                  const shape = new THREE.Shape();
+                  const projected = ring.map(([lon, lat]) => {
+                    const v = latLonToVec3(lat, lon, R);
+                    return new THREE.Vector2(
+                      Math.atan2(v.x, v.z),
+                      Math.asin(Math.max(-1, Math.min(1, v.y / R)))
+                    );
+                  });
+                  // Check for wrapping issues
+                  let hasWrap = false;
+                  for (let i = 1; i < projected.length; i++) {
+                    if (Math.abs(projected[i].x - projected[i-1].x) > Math.PI) {
+                      hasWrap = true;
+                      break;
+                    }
+                  }
+                  if (!hasWrap && projected.length > 3) {
+                    shape.moveTo(projected[0].x, projected[0].y);
+                    for (let i = 1; i < projected.length; i++) {
+                      shape.lineTo(projected[i].x, projected[i].y);
+                    }
+                    shape.closePath();
+                  }
+                } catch(e) {}
+              }
+            }
+          });
+        });
+      });
+
+      // Add coastlines for extra detail
+      if (world.objects.land) {
+        const land = topojson.mesh(world, world.objects.land);
+        const coastMat = new THREE.LineBasicMaterial({ color: 0x6a6a88, transparent: true, opacity: 0.35 });
+        
+        if (land.type === 'MultiLineString') {
+          land.coordinates.forEach(line => {
+            const points = line.map(([lon, lat]) => latLonToVec3(lat, lon, R * 1.001));
+            if (points.length > 1) {
+              const geo = new THREE.BufferGeometry().setFromPoints(points);
+              globeGroup.add(new THREE.Line(geo, coastMat));
+            }
+          });
+        }
+      }
+    })
+    .catch(() => {});
+
+  // Exchange locations with metadata
+  const exchanges = [
+    { lat: 40.71, lon: -74.01, name: 'NYSE / NASDAQ', country: 'United States', lang: 'English' },
+    { lat: 51.51, lon: -0.12, name: 'London Stock Exchange', country: 'United Kingdom', lang: 'English' },
+    { lat: 35.68, lon: 139.69, name: 'Tokyo Stock Exchange', country: 'Japan', lang: 'Japanese' },
+    { lat: 22.28, lon: 114.16, name: 'HKEX', country: 'Hong Kong', lang: 'Mandarin / English' },
+    { lat: 48.86, lon: 2.35, name: 'Euronext Paris', country: 'France', lang: 'French' },
+    { lat: 31.23, lon: 121.47, name: 'Shanghai Stock Exchange', country: 'China', lang: 'Mandarin' },
+    { lat: 32.07, lon: 34.78, name: 'Tel Aviv Stock Exchange', country: 'Israel', lang: 'Hebrew / English' },
+    { lat: -33.87, lon: 151.21, name: 'ASX', country: 'Australia', lang: 'English' },
+    { lat: 19.08, lon: 72.88, name: 'BSE / NSE', country: 'India', lang: 'Hindi / English' },
+    { lat: -26.20, lon: 28.04, name: 'JSE', country: 'South Africa', lang: 'English' },
+    { lat: 1.28, lon: 103.85, name: 'SGX', country: 'Singapore', lang: 'English / Mandarin' },
+    { lat: 37.57, lon: 126.98, name: 'Korea Exchange', country: 'South Korea', lang: 'Korean' },
+    { lat: 19.43, lon: -99.13, name: 'BMV', country: 'Mexico', lang: 'Spanish' },
+    { lat: -23.55, lon: -46.63, name: 'B3', country: 'Brazil', lang: 'Portuguese' },
+    { lat: 47.37, lon: 8.54, name: 'SIX', country: 'Switzerland', lang: 'German / French' },
+    { lat: 50.11, lon: 8.68, name: 'Frankfurt Stock Exchange', country: 'Germany', lang: 'German' },
+    { lat: 43.65, lon: -79.38, name: 'Toronto Stock Exchange', country: 'Canada', lang: 'English / French' },
+    { lat: 59.33, lon: 18.07, name: 'Nasdaq Stockholm', country: 'Sweden', lang: 'Swedish' },
+    { lat: 52.37, lon: 4.90, name: 'Euronext Amsterdam', country: 'Netherlands', lang: 'Dutch' },
+    { lat: 25.29, lon: 55.33, name: 'DFM', country: 'UAE', lang: 'Arabic / English' },
+  ];
+
+  // Create dots with raycasting support
+  const dotMeshes = [];
+  const dotGeo = new THREE.SphereGeometry(0.018, 12, 12);
+  const dotMat = new THREE.MeshBasicMaterial({ color: 0xd0d4dc });
+  const glowGeo = new THREE.SphereGeometry(0.035, 12, 12);
+  const glowMat = new THREE.MeshBasicMaterial({ color: 0xb8bcc8, transparent: true, opacity: 0.15 });
+  const pulseGeo = new THREE.SphereGeometry(0.05, 12, 12);
+  const pulseMat = new THREE.MeshBasicMaterial({ color: 0xb8bcc8, transparent: true, opacity: 0.08 });
+
+  exchanges.forEach((ex, i) => {
+    const pos = latLonToVec3(ex.lat, ex.lon, R * 1.005);
+    
+    const dot = new THREE.Mesh(dotGeo, dotMat.clone());
+    dot.position.copy(pos);
+    dot.userData = { index: i, exchange: ex };
+    globeGroup.add(dot);
+    dotMeshes.push(dot);
+
+    const glow = new THREE.Mesh(glowGeo, glowMat.clone());
+    glow.position.copy(pos);
+    globeGroup.add(glow);
+
+    const pulse = new THREE.Mesh(pulseGeo, pulseMat.clone());
+    pulse.position.copy(pos);
+    pulse.userData.pulse = true;
+    globeGroup.add(pulse);
+  });
+
+  // Arcs
+  function createArc(i1, i2) {
+    const s = latLonToVec3(exchanges[i1].lat, exchanges[i1].lon, R * 1.005);
+    const e = latLonToVec3(exchanges[i2].lat, exchanges[i2].lon, R * 1.005);
+    const mid = s.clone().add(e).multiplyScalar(0.5).normalize().multiplyScalar(R * 1.35);
+    const curve = new THREE.QuadraticBezierCurve3(s, mid, e);
+    const geo = new THREE.BufferGeometry().setFromPoints(curve.getPoints(40));
+    const mat = new THREE.LineBasicMaterial({ color: 0xb8bcc8, transparent: true, opacity: 0.06 });
+    globeGroup.add(new THREE.Line(geo, mat));
+  }
+
+  createArc(0, 1);
+  createArc(1, 2);
+  createArc(0, 6);
+  createArc(2, 3);
+  createArc(1, 15);
+  createArc(0, 13);
+  createArc(6, 8);
+  createArc(3, 5);
+
+  // Tilt
+  globeGroup.rotation.x = 0.25;
+
+  // Raycaster for tooltips
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+  let hoveredDot = null;
+
+  canvas.addEventListener('mousemove', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(dotMeshes);
+
+    if (intersects.length > 0) {
+      const dot = intersects[0].object;
+      const ex = dot.userData.exchange;
+      if (hoveredDot !== dot) {
+        if (hoveredDot) hoveredDot.material.color.setHex(0xd0d4dc);
+        hoveredDot = dot;
+        dot.material.color.setHex(0xffffff);
+        tooltip.querySelector('.tt-exchange').textContent = ex.name;
+        tooltip.querySelector('.tt-detail').textContent = ex.country + ' — ' + ex.lang;
+        tooltip.style.opacity = '1';
+      }
+      tooltip.style.left = (e.clientX - rect.left + 16) + 'px';
+      tooltip.style.top = (e.clientY - rect.top - 16) + 'px';
+      canvas.style.cursor = 'pointer';
+    } else {
+      if (hoveredDot) {
+        hoveredDot.material.color.setHex(0xd0d4dc);
+        hoveredDot = null;
+      }
+      tooltip.style.opacity = '0';
+      canvas.style.cursor = 'default';
+    }
+  });
+
+  canvas.addEventListener('mouseleave', () => {
+    tooltip.style.opacity = '0';
+    canvas.style.cursor = 'default';
+    if (hoveredDot) {
+      hoveredDot.material.color.setHex(0xd0d4dc);
+      hoveredDot = null;
+    }
+  });
+
+  // Animate
+  let time = 0;
+  function animate() {
+    requestAnimationFrame(animate);
+    time += 0.016;
+    globeGroup.rotation.y += 0.0015;
+
+    globeGroup.children.forEach(child => {
+      if (child.userData && child.userData.pulse) {
+        const s = 1 + Math.sin(time * 2) * 0.3;
+        child.scale.set(s, s, s);
+        child.material.opacity = 0.08 + Math.sin(time * 2) * 0.04;
+      }
+    });
+
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    const newW = container.clientWidth;
+    camera.aspect = newW / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(newW, h);
+  });
+}
+
+// Init globe when companies page is shown
+const globeObserver = new MutationObserver(() => {
+  const page = document.getElementById('page-companies');
+  if (page && !page.classList.contains('hidden')) {
+    if (!window.globeInitialized) {
+      initGlobe();
+      window.globeInitialized = true;
+    }
+  }
+});
+globeObserver.observe(document.getElementById('page-companies'), { attributes: true, attributeFilter: ['class'] });
 </script>
 
 </body>
