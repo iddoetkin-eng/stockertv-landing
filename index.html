@@ -1026,7 +1026,7 @@ body::before {
   .section-inner { text-align: center; }
   .section-subtitle { margin-left: auto; margin-right: auto; }
   .section-note { margin-left: auto; margin-right: auto; }
-  .stats-bar { grid-template-columns: repeat(2, 1fr); }
+  .stats-bar { grid-template-columns: repeat(3, 1fr) !important; }
   .features-row { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
   .video-wrap { max-height: none; aspect-ratio: 9/16; max-width: 85vw; margin-left: auto; margin-right: auto; }
   .script-box { padding: 1.5rem; }
@@ -1049,7 +1049,7 @@ body::before {
 
 @media (max-width: 480px) {
   .section { padding: 2.5rem 1rem; }
-  .stats-bar { grid-template-columns: 1fr 1fr; }
+  .stats-bar { grid-template-columns: 1fr !important; }
   .features-row { grid-template-columns: 1fr; }
   .hero h1 { font-size: 1.5rem; }
   .nav-switch { font-size: 0.65rem; padding: 0.35rem 0.6rem; letter-spacing: 0.04em; }
@@ -1145,22 +1145,18 @@ body::before {
 
 <!-- ═══ STATS BAR ═══ -->
 <div class="section" style="min-height: auto; padding: 0;">
-  <div class="stats-bar" id="stats">
+  <div class="stats-bar" id="stats" style="grid-template-columns: repeat(3, 1fr);">
     <div class="stat-item" data-animate data-delay="0">
-      <div class="stat-number" data-count="32000">0+</div>
-      <div class="stat-label">Companies in Database</div>
-    </div>
-    <div class="stat-item" data-animate data-delay="100">
       <div class="stat-number" data-count="32000">0+</div>
       <div class="stat-label">Companies Covered</div>
     </div>
-    <div class="stat-item" data-animate data-delay="200">
-      <div class="stat-number" data-count="53">0</div>
+    <div class="stat-item" data-animate data-delay="100">
+      <div class="stat-number" data-count="53">0+</div>
       <div class="stat-label">Global Exchanges</div>
     </div>
-    <div class="stat-item" data-animate data-delay="300">
-      <div class="stat-number">24</div>
-      <div class="stat-label">Built-in Compliance Engine</div>
+    <div class="stat-item" data-animate data-delay="200">
+      <div class="stat-number">24/7</div>
+      <div class="stat-label">Monitoring the News</div>
     </div>
   </div>
 </div>
