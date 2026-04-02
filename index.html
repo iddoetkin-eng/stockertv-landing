@@ -104,90 +104,7 @@ body::before {
   transition: all 0.3s ease;
 }
 
-.hamburger {
-  width: 28px;
-  height: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  cursor: pointer;
-  z-index: 201;
-  position: relative;
-}
-
-.hamburger span {
-  display: block;
-  width: 100%;
-  height: 2px;
-  background: #fff;
-  transition: all 0.3s ease;
-  border-radius: 1px;
-}
-
-.hamburger.active span:nth-child(1) {
-  transform: translateY(9px) rotate(45deg);
-}
-
-.hamburger.active span:nth-child(2) {
-  opacity: 0;
-}
-
-.hamburger.active span:nth-child(3) {
-  transform: translateY(-9px) rotate(-45deg);
-}
-
-.menu-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.97);
-  z-index: 200;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1.5rem;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.4s ease;
-}
-
-.menu-overlay.active {
-  opacity: 1;
-  pointer-events: all;
-}
-
-.menu-overlay a {
-  font-family: var(--serif);
-  font-size: clamp(1.5rem, 3.5vw, 2.5rem);
-  color: var(--text-secondary);
-  text-decoration: none;
-  transition: color 0.3s ease;
-  position: relative;
-}
-
-.menu-overlay a:hover,
-.menu-overlay a.current {
-  color: #ffffff;
-}
-
-.menu-overlay a.current::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: var(--accent);
-}
-
-.menu-divider {
-  width: 40px;
-  height: 1px;
-  background: var(--border);
-}
-
-.page { display: block; }
-.page.hidden { display: none; }
+/* (hamburger removed — gateway replaces it) */
 
 [data-animate-companies] {
   opacity: 0;
@@ -814,6 +731,281 @@ body::before {
   font-style: italic;
 }
 
+/* ─── NAV SWITCH LINK ─── */
+.nav-switch {
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.nav-switch:hover {
+  color: var(--text-primary);
+  border-color: rgba(184, 188, 200, 0.3);
+}
+
+.nav.hidden { display: none; }
+
+.nav.nav-entering {
+  animation: navSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes navSlideIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── GATEWAY PAGE ─── */
+.gateway {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.gateway-bg {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(184, 188, 200, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 20% 100%, rgba(120, 130, 160, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(120, 130, 160, 0.04) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* Animated grid overlay on gateway */
+.gateway-bg::before {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  background-image: 
+    linear-gradient(rgba(184, 188, 200, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(184, 188, 200, 0.03) 1px, transparent 1px);
+  background-size: 80px 80px;
+  animation: gridDrift 25s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes gridDrift {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  100% { transform: translate(40px, 40px) rotate(1deg); }
+}
+
+/* Page transition */
+.page {
+  display: block;
+  animation: pageIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.page.hidden { display: none; }
+
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.gateway-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 2rem;
+  width: 100%;
+  max-width: 900px;
+}
+
+.gateway-logo {
+  font-family: 'Abril Fatface', serif;
+  font-size: clamp(2.8rem, 6vw, 4.5rem);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+  margin-bottom: 0.8rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.1s forwards;
+}
+
+.gateway-logo span {
+  color: var(--logo-silver);
+}
+
+.gateway-tagline {
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 3rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.3s forwards;
+}
+
+.gateway-divider {
+  width: 40px;
+  height: 1px;
+  background: var(--accent);
+  margin: 0 auto 2rem;
+  opacity: 0;
+  animation: fadeUp 0.6s 0.45s forwards;
+}
+
+.gateway-prompt {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin-bottom: 2.5rem;
+  letter-spacing: 0.06em;
+  opacity: 0;
+  animation: fadeUp 0.6s 0.5s forwards;
+}
+
+.gateway-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin: 0 auto 3.5rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.6s forwards;
+}
+
+.gateway-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(184, 188, 200, 0.15);
+  border-radius: 6px;
+  padding: 2.5rem 2rem 2rem;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  cursor: pointer;
+  animation: cardBorderPulse 3s ease-in-out infinite;
+}
+
+.gateway-card:nth-child(2) {
+  animation-delay: 1.5s;
+}
+
+@keyframes cardBorderPulse {
+  0%, 100% { 
+    border-color: rgba(184, 188, 200, 0.12);
+    box-shadow: 0 0 0 0 rgba(184, 188, 200, 0);
+  }
+  50% { 
+    border-color: rgba(184, 188, 200, 0.35);
+    box-shadow: 0 0 20px rgba(184, 188, 200, 0.07), inset 0 0 20px rgba(184, 188, 200, 0.03);
+  }
+}
+
+.gateway-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(184, 188, 200, 0.05) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.gateway-card:hover {
+  border-color: rgba(184, 188, 200, 0.35);
+  background: rgba(255, 255, 255, 0.04);
+  transform: translateY(-6px);
+  animation: none;
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.3),
+    0 0 25px rgba(184, 188, 200, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.gateway-card:hover::before {
+  opacity: 1;
+}
+
+.gateway-card-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 1.5rem;
+  color: var(--accent);
+  opacity: 0.6;
+  transition: all 0.3s ease;
+}
+
+.gateway-card:hover .gateway-card-icon {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.gateway-card h2 {
+  font-family: var(--serif);
+  font-size: clamp(1.15rem, 2.2vw, 1.4rem);
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 0.8rem;
+  line-height: 1.3;
+  position: relative;
+}
+
+.gateway-card p {
+  font-size: 0.85rem;
+  font-weight: 300;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.gateway-card-arrow {
+  width: 28px;
+  height: 28px;
+  margin: 0 auto;
+  color: var(--accent);
+  opacity: 0.4;
+  transform: translateX(0);
+  transition: all 0.3s ease;
+  position: relative;
+  animation: arrowNudge 2.5s ease-in-out infinite;
+}
+
+@keyframes arrowNudge {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(4px); }
+}
+
+.gateway-card:hover .gateway-card-arrow {
+  opacity: 0.8;
+  animation: none;
+  transform: translateX(4px);
+}
+
+.gateway-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  opacity: 0;
+  animation: fadeUp 0.6s 0.8s forwards;
+}
+
+.gateway-footer a {
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.gateway-footer a:hover {
+  color: var(--text-secondary);
+}
+
 /* ─── ANIMATIONS ─── */
 @keyframes fadeUp {
   to {
@@ -848,6 +1040,11 @@ body::before {
   .stat-item { padding: 1.5rem 1rem; }
   .footer-title { font-size: 0.6rem; padding: 0.5rem 1.2rem; }
   .marquee-container::before, .marquee-container::after { width: 40px; }
+  .gateway-cards { grid-template-columns: 1fr; gap: 1rem; max-width: 400px; margin-left: auto; margin-right: auto; }
+  .gateway-card { padding: 2rem 1.5rem 1.5rem; }
+  .gateway-logo { font-size: clamp(2.2rem, 8vw, 3rem); }
+  .gateway-footer { flex-direction: column; gap: 0.5rem; }
+  .nav-switch { font-size: 0.7rem; padding: 0.4rem 0.8rem; }
 }
 
 @media (max-width: 480px) {
@@ -855,6 +1052,7 @@ body::before {
   .stats-bar { grid-template-columns: 1fr 1fr; }
   .features-row { grid-template-columns: 1fr; }
   .hero h1 { font-size: 1.5rem; }
+  .nav-switch { font-size: 0.65rem; padding: 0.35rem 0.6rem; letter-spacing: 0.04em; }
   .nav-cta { display: none; }
   .video-wrap { max-width: 95vw; }
   .feature-item h4 { font-size: 0.8rem; }
@@ -870,29 +1068,56 @@ body::before {
 </head>
 <body>
 
-<!-- ═══ NAVIGATION ═══ -->
-<nav class="nav" id="nav">
-  <a href="#" class="nav-logo" onclick="showPage('main'); return false;">Stocker<span>TV</span></a>
+<!-- ═══ NAVIGATION (hidden on gateway) ═══ -->
+<nav class="nav hidden" id="nav">
+  <a href="#" class="nav-logo" onclick="showPage('gateway'); return false;">Stocker<span>TV</span></a>
   <div class="nav-right">
+    <a href="#" class="nav-switch" id="navSwitch" onclick="switchPage(); return false;"></a>
     <a href="mailto:iddo.etkin@gmail.com" class="nav-cta">Get in Touch</a>
-    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
   </div>
 </nav>
 
-<div class="menu-overlay" id="menuOverlay">
-  <a href="#" class="current" data-page="main" onclick="showPage('main'); return false;">For Platforms & Banks</a>
-  <div class="menu-divider"></div>
-  <a href="#" data-page="companies" onclick="showPage('companies'); return false;">For Companies</a>
-  <div class="menu-divider"></div>
-  <a href="mailto:iddo.etkin@gmail.com">Contact Us</a>
+<!-- ═══ GATEWAY — CHOOSE YOUR PATH ═══ -->
+<div class="page" id="page-gateway">
+  <section class="gateway">
+    <div class="gateway-bg"></div>
+    <div class="gateway-content">
+      <div class="gateway-logo">Stocker<span>TV</span></div>
+      <p class="gateway-tagline">AI-Powered Financial Video Content</p>
+      <div class="gateway-divider"></div>
+      <p class="gateway-prompt">Choose your path</p>
+      <div class="gateway-cards">
+        <a href="#" class="gateway-card" onclick="showPage('main'); return false;">
+          <div class="gateway-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 3v18h18"/><path d="M7 16l4-8 4 4 4-6"/></svg>
+          </div>
+          <h2>Trading Platforms & Banks</h2>
+          <p>White-label AI video content for brokerages, neobanks, and trading platforms</p>
+          <div class="gateway-card-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+          </div>
+        </a>
+        <a href="#" class="gateway-card" onclick="showPage('companies'); return false;">
+          <div class="gateway-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h2>IR for Public Companies</h2>
+          <p>Transform your investor relations materials into professional video content</p>
+          <div class="gateway-card-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+          </div>
+        </a>
+      </div>
+      <div class="gateway-footer">
+        <a href="mailto:iddo.etkin@gmail.com">iddo.etkin@gmail.com</a>
+        <span>&copy; 2026 StockerTV</span>
+      </div>
+    </div>
+  </section>
 </div>
 
 <!-- ═══ PAGE: MAIN (Platforms & Banks) ═══ -->
-<div class="page" id="page-main">
+<div class="page hidden" id="page-main">
 
 <!-- ═══ SECTION 1 — WELCOME ═══ -->
 <section class="section hero" id="welcome">
@@ -1585,30 +1810,72 @@ const videoObserver = new IntersectionObserver((entries) => {
 
 videos.forEach(video => videoObserver.observe(video));
 
-// ─── Hamburger menu ───
-function toggleMenu() {
-  const hamburger = document.getElementById('hamburger');
-  const overlay = document.getElementById('menuOverlay');
-  hamburger.classList.toggle('active');
-  overlay.classList.toggle('active');
-  document.body.style.overflow = overlay.classList.contains('active') ? 'hidden' : '';
+// ─── Hamburger menu — REMOVED, replaced by gateway ───
+
+// ─── Current page tracking ───
+let currentPage = 'gateway';
+
+function switchPage() {
+  if (currentPage === 'main') showPage('companies');
+  else if (currentPage === 'companies') showPage('main');
 }
 
 function showPage(page) {
-  const hamburger = document.getElementById('hamburger');
-  const overlay = document.getElementById('menuOverlay');
-  hamburger.classList.remove('active');
-  overlay.classList.remove('active');
-  document.body.style.overflow = '';
+  currentPage = page;
+  const nav = document.getElementById('nav');
+  const navSwitch = document.getElementById('navSwitch');
   
-  document.getElementById('page-main').classList.toggle('hidden', page !== 'main');
-  document.getElementById('page-companies').classList.toggle('hidden', page !== 'companies');
+  // Hide all pages
+  document.getElementById('page-gateway').classList.add('hidden');
+  document.getElementById('page-main').classList.add('hidden');
+  document.getElementById('page-companies').classList.add('hidden');
   
-  overlay.querySelectorAll('a[data-page]').forEach(a => {
-    a.classList.toggle('current', a.dataset.page === page);
-  });
-
+  // Show/hide nav
+  if (page === 'gateway') {
+    nav.classList.add('hidden');
+    nav.classList.remove('nav-entering');
+  } else {
+    const wasHidden = nav.classList.contains('hidden');
+    nav.classList.remove('hidden');
+    if (wasHidden) {
+      nav.classList.remove('nav-entering');
+      void nav.offsetWidth; // force reflow
+      nav.classList.add('nav-entering');
+    }
+  }
+  
+  // Update nav switch text
+  if (page === 'main') {
+    navSwitch.textContent = 'For Companies →';
+  } else if (page === 'companies') {
+    navSwitch.textContent = 'For Platforms & Banks →';
+  }
+  
+  // Show selected page with animation
+  const targetPage = document.getElementById('page-' + page);
+  targetPage.classList.remove('hidden');
+  targetPage.style.animation = 'none';
+  void targetPage.offsetWidth;
+  targetPage.style.animation = '';
+  
   window.scrollTo(0, 0);
+
+  // Re-observe animations for main page
+  if (page === 'main') {
+    const mainObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const delay = entry.target.dataset.delay || 0;
+          setTimeout(() => entry.target.classList.add('visible'), parseInt(delay));
+          mainObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+    document.querySelectorAll('#page-main [data-animate]').forEach(el => {
+      el.classList.remove('visible');
+      mainObserver.observe(el);
+    });
+  }
 
   // Re-observe animations for companies page
   if (page === 'companies') {
